@@ -1,4 +1,5 @@
 using AgriShare.Domain.Entities;
+using AgriShare.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace AgriShare.Infrastructure.Persistence;
@@ -23,6 +24,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasIndex(user => user.Email).IsUnique();
+            entity.Property(user => user.IsActive).HasDefaultValue(true);
         });
 
         modelBuilder.Entity<Provider>(entity =>
@@ -99,10 +101,19 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         modelBuilder.Entity<ServiceExecution>(entity =>
         {
+            entity.Property(execution => execution.ActualSize).HasPrecision(18, 4);
+            entity.Property(execution => execution.Status)
+                .HasDefaultValue(ServiceExecutionStatus.NotStarted);
+
             entity.HasOne(execution => execution.ServiceRequest)
                 .WithOne(request => request.ServiceExecution)
                 .HasForeignKey<ServiceExecution>(execution => execution.ServiceRequestId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(execution => execution.Operator)
+                .WithMany()
+                .HasForeignKey(execution => execution.OperatorId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         modelBuilder.Entity<Review>(entity =>

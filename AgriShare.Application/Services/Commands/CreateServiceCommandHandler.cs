@@ -46,18 +46,6 @@ public sealed class CreateServiceCommandHandler(IUnitOfWork unitOfWork)
         await unitOfWork.Services.AddAsync(service, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new ServiceDto(
-            service.Id,
-            service.ProviderId,
-            service.MachineryId,
-            service.OperatorId,
-            service.Title,
-            service.LaborType,
-            service.PricingUnit,
-            service.BasePrice,
-            service.TransportFee,
-            service.IsActive,
-            service.Location.Y,
-            service.Location.X);
+        return ServiceDto.FromEntity(service);
     }
 }
