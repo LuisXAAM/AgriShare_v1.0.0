@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="AgriShare.API/AgriShare.API.csproj" />
+  <Project Path="AgriShare.Application/AgriShare.Application.csproj" />
   <Project Path="AgriShare.Domain/AgriShare.Domain.csproj" />
+  <Project Path="AgriShare.Infrastructure/AgriShare.Infrastructure.csproj" />
 </Solution>

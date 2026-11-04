@@ -60,6 +60,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(service => service.TransportFee).HasPrecision(18, 2);
             entity.Property(service => service.CoverageArea)
                 .HasColumnType("geometry(Polygon, 4326)");
+            entity.Property(service => service.Location)
+                .HasColumnType("geometry(Point, 4326)");
 
             entity.HasOne(service => service.Provider)
                 .WithMany(provider => provider.Services)
@@ -69,12 +71,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.HasOne(service => service.Machinery)
                 .WithMany()
                 .HasForeignKey(service => service.MachineryId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
             entity.HasOne(service => service.Operator)
                 .WithMany()
                 .HasForeignKey(service => service.OperatorId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         modelBuilder.Entity<ServiceRequest>(entity =>
