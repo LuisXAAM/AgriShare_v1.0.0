@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<ProjectReference Include="..\AgriShare.Application\AgriShare.Application.csproj" />
 	<ProjectReference Include="..\AgriShare.Domain\AgriShare.Domain.csproj" />
 	<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="10.0.0" />
   </ItemGroup>
