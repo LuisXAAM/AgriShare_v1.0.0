@@ -127,8 +127,8 @@ namespace AgriShare.Infrastructure.Persistence.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -136,24 +136,16 @@ namespace AgriShare.Infrastructure.Persistence.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("integer");
 
-                    b.Property<int>("RevieweeId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ReviewerId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ServiceRequestId")
+                    b.Property<int>("ServiceExecutionId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RevieweeId");
+                    b.HasIndex("ServiceExecutionId")
+                        .IsUnique();
 
-                    b.HasIndex("ReviewerId");
-
-                    b.HasIndex("ServiceRequestId");
-
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", t =>
+                        t.HasCheckConstraint("CK_Reviews_Rating_Range", "\"Rating\" BETWEEN 1 AND 5"));
                 });
 
             modelBuilder.Entity("AgriShare.Domain.Entities.Service", b =>
@@ -387,29 +379,13 @@ namespace AgriShare.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("AgriShare.Domain.Entities.Review", b =>
                 {
-                    b.HasOne("AgriShare.Domain.Entities.User", "Reviewee")
-                        .WithMany()
-                        .HasForeignKey("RevieweeId")
+                    b.HasOne("AgriShare.Domain.Entities.ServiceExecution", "ServiceExecution")
+                        .WithOne("Review")
+                        .HasForeignKey("AgriShare.Domain.Entities.Review", "ServiceExecutionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AgriShare.Domain.Entities.User", "Reviewer")
-                        .WithMany()
-                        .HasForeignKey("ReviewerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("AgriShare.Domain.Entities.ServiceRequest", "ServiceRequest")
-                        .WithMany()
-                        .HasForeignKey("ServiceRequestId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Reviewee");
-
-                    b.Navigation("Reviewer");
-
-                    b.Navigation("ServiceRequest");
+                    b.Navigation("ServiceExecution");
                 });
 
             modelBuilder.Entity("AgriShare.Domain.Entities.Service", b =>
@@ -451,6 +427,8 @@ namespace AgriShare.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Operator");
+
+                    b.Navigation("Review");
 
                     b.Navigation("ServiceRequest");
                 });

@@ -14,7 +14,7 @@ public sealed class UnitOfWork(AppDbContext context) : IUnitOfWork, IDisposable
     public IServiceRepository Services { get; } = new ServiceRepository(context);
     public IServiceRequestRepository ServiceRequests { get; } = new ServiceRequestRepository(context);
     public IServiceExecutionRepository ServiceExecutions { get; } = new ServiceExecutionRepository(context);
-    public IRepository<Review> Reviews { get; } = new Repository<Review>(context);
+    public IReviewRepository Reviews { get; } = new ReviewRepository(context);
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

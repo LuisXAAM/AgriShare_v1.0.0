@@ -11,7 +11,7 @@ public interface IUnitOfWork
     IServiceRepository Services { get; }
     IServiceRequestRepository ServiceRequests { get; }
     IServiceExecutionRepository ServiceExecutions { get; }
-    IRepository<Review> Reviews { get; }
+    IReviewRepository Reviews { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

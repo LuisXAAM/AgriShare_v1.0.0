@@ -16,4 +16,5 @@ public class ServiceExecution
 
     public ServiceRequest ServiceRequest { get; set; } = null!;
     public Operator? Operator { get; set; }
+    public Review? Review { get; set; }
 }

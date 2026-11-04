@@ -1,5 +1,6 @@
 using AgriShare.Domain.Entities;
 using AgriShare.Domain.Enums;
+using AgriShare.Infrastructure.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace AgriShare.Infrastructure.Persistence;
@@ -116,22 +117,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .OnDelete(DeleteBehavior.SetNull);
         });
 
-        modelBuilder.Entity<Review>(entity =>
-        {
-            entity.HasOne(review => review.ServiceRequest)
-                .WithMany()
-                .HasForeignKey(review => review.ServiceRequestId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            entity.HasOne(review => review.Reviewer)
-                .WithMany()
-                .HasForeignKey(review => review.ReviewerId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            entity.HasOne(review => review.Reviewee)
-                .WithMany()
-                .HasForeignKey(review => review.RevieweeId)
-                .OnDelete(DeleteBehavior.Restrict);
-        });
+        modelBuilder.ApplyConfiguration(new ReviewConfiguration());
     }
 }

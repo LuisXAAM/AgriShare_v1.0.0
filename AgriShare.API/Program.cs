@@ -6,8 +6,10 @@ using AgriShare.Application.Services.Commands;
 using AgriShare.Application.Services.Queries;
 using AgriShare.Application.Users.Commands;
 using AgriShare.Application.Users.Queries;
+using AgriShare.Application.Reviews.Commands;
 using AgriShare.Infrastructure.Persistence;
 using AgriShare.Infrastructure.Persistence.Repositories;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +22,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString, npgsqlOptions => npgsqlOptions.UseNetTopologySuite()));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddMediatR(configuration =>
+    configuration.RegisterServicesFromAssembly(typeof(CreateReviewCommandHandler).Assembly));
 builder.Services.AddScoped<CreateServiceRequestCommandHandler>();
 builder.Services.AddScoped<GetServiceRequestByIdQueryHandler>();
 builder.Services.AddScoped<StartServiceExecutionCommandHandler>();
